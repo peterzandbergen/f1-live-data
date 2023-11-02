@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: grafana
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  serviceName: grafana
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:9.4.3
+          ports:
+            - containerPort: 3000
+              name: grafana
+          volumeMounts:
+            - name: grafana-data
+              mountPath: /var/lib/grafana
+            - name: grafana-provisioning-dashboards
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: grafana-provisioning-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: grafana-dashboards
+              mountPath: /tmp/dashboards
+      volumes:
+        - name: grafana-provisioning-dashboards
+          configMap:
+            name: grafana-config
+            items:
+              - key: provisioning-dashboards-default.yaml
+                path: default.yaml
+        - name: grafana-provisioning-datasources
+          configMap:
+            name: grafana-config
+            items:
+              - key: provisioning-dashboards-datasources.yaml
+                path: datasources.yaml
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-config
+            items:
+              - key: dashboards-dashboard.json
+                path: dashboard.json
+  volumeClaimTemplates:
+    - metadata:
+        name: grafana-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

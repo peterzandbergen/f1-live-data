@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataimporter-live
+spec:
+  selector:
+    matchLabels:
+      app: dataimporter-live
+  template:
+    metadata:
+      labels:
+        app: dataimporter-live
+    spec:
+      containers:
+      - name: dataimporter-live
+        image: docker.io/peterzandbergen/data-importer-image:python-3.9
+        command:
+          - dataimporter
+        args:
+          - process-live-session
+          - --influx-url http://influxdb:8086
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+

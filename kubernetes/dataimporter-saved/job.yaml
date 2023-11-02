@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dataimporter-saved
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata:
+      labels:
+        app: dataimporter-saved
+    spec:
+      containers:
+      - name: dataimporter-saved
+        image: docker.io/peterzandbergen/data-importer-image:python-3.9
+        command:
+          - dataimporter
+        args:
+          - process-mock-data
+          - /saves/save.txt
+          - --influx-url
+          - http://influxdb:8086
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: /saves
+            name: saved-data
+      volumes:
+        - name: saved-data
+          persistentVolumeClaim:
+            claimName: saves
+      restartPolicy: Never

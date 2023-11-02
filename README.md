@@ -107,3 +107,39 @@ You can set a maximum value in the panel settings.
 - Display (personal) fastest lap
 - Display sector times
 - Number pit stops and tires compound (`TimingAppData`)
+
+## Kubernetes deployment
+
+Run this command to start the application in your cluster.
+
+```bash
+kustomize build kubernetes | kubectl apply -f -
+```
+
+Run the saves container to copy the saved file to the pvc.
+
+```bash
+kustomize build kubernetes/saves-container | kubectl apply -f -
+```
+
+Copy the file to the pvc.
+
+```bash
+kubectl cp saves/partial_saved_data_2023_03_05.txt saves-container:/saves/save.txt
+```
+
+Delete the saves-container, but do not delete the pvc.
+
+```bash
+kubectl delete pod saves-container
+```
+
+Start the importer
+
+```bash
+kustomize build kubernetes/dataimporter-saved | kubectl apply -f -
+```
+
+```bash
+kubectl port-forward service/grafana 3000:3000
+```

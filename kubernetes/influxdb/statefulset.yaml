@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influxdb
+spec:
+  selector:
+    matchLabels:
+      app: influxdb
+  serviceName: influxdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:2.6-alpine
+        ports:
+        - containerPort: 8086
+          name: influxdb
+        volumeMounts:
+        - name: storage
+          mountPath: /var/lib/influxdb2
+        env:
+          - name: DOCKER_INFLUXDB_INIT_MODE
+            value: setup
+          - name: DOCKER_INFLUXDB_INIT_USERNAME
+            value: admin
+          - name: DOCKER_INFLUXDB_INIT_PASSWORD
+            value: password
+          - name: DOCKER_INFLUXDB_INIT_ORG
+            value: f1
+          - name: DOCKER_INFLUXDB_INIT_BUCKET
+            value: data
+          - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+            value: LoOFvHw1tUXrUZ8oUqaozmEjxxG9UNO5H5YfRI4cGu306xwQVu_KMNxRYRMrWbhdD886N2PuRgpo9v4v_58pHw==
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi

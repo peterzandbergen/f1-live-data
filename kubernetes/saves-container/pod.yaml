@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: saves-container
+spec:
+  containers:
+    - name: saves-container
+      image: alpine
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      command:
+        - sh
+      args:
+        - -c
+        - "while true; do sleep 30; echo sleeping...; done"
+      volumeMounts:
+        - mountPath: /saves
+          name: saves
+  volumes:
+    - name: saves
+      persistentVolumeClaim:
+        claimName: saves
+            
