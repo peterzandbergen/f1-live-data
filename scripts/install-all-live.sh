@@ -10,10 +10,6 @@ $DIR/install-kind.sh
 
 $DIR/create-backend.sh
 
-# Load the data.
+# Start the live race.
 
-$DIR/load-saved-race.sh
-
-# Start the saved race.
-
-$DIR/run-saved-race.sh
+$DIR/run-live-race.sh
