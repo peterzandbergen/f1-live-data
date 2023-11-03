@@ -8,4 +8,4 @@ spec:
   ports:
   - port: 3000
     targetPort: grafana
-  type: NodePort
+  type: LoadBalancer

@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kiali-service
+spec:
+  hosts:
+    - kiali.172.18.255.200.nip.io
+  gateways:
+    - kiali-gateway
+    # - mesh
+  http:
+    - name: all-traffic
+      route:
+        - destination:
+            host: kiali
+            port:
+              number: 20001
+              

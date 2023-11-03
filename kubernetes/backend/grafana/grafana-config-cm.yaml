@@ -12,7 +12,7 @@ data:
         type: file
         options:
           path: /tmp/dashboards/
-  provisioning-dashboards-datasources.yaml: |-
+  provisioning-datasources-datasource.yaml: |-
     apiVersion: 1
     datasources:  
       - name: InfluxDB

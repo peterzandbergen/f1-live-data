@@ -113,13 +113,19 @@ You can set a maximum value in the panel settings.
 Run this command to start the application in your cluster.
 
 ```bash
-kustomize build kubernetes | kubectl apply -f -
+kustomize build kubernetes/backend | kubectl apply -f -
 ```
 
 Run the saves container to copy the saved file to the pvc.
 
 ```bash
 kustomize build kubernetes/saves-container | kubectl apply -f -
+```
+
+Wait for the saves container to be ready.
+
+```bash
+while ! kubectl wait --for=condition=Ready pod saves-container; do sleep 1; done
 ```
 
 Copy the file to the pvc.
@@ -134,12 +140,19 @@ Delete the saves-container, but do not delete the pvc.
 kubectl delete pod saves-container
 ```
 
+Open a port to grafana and keep it running
+
+```bash
+kubectl port-forward service/grafana 3000:3000
+```
+
+Open http://localhost:3000 in the browser and login with admin admin.
+
 Start the importer
 
 ```bash
 kustomize build kubernetes/dataimporter-saved | kubectl apply -f -
 ```
 
-```bash
-kubectl port-forward service/grafana 3000:3000
-```
+
+

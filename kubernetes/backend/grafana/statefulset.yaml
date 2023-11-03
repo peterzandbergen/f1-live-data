@@ -22,26 +22,20 @@ spec:
           volumeMounts:
             - name: grafana-data
               mountPath: /var/lib/grafana
-            - name: grafana-provisioning-dashboards
-              mountPath: /etc/grafana/provisioning/dashboards
-            - name: grafana-provisioning-datasources
-              mountPath: /etc/grafana/provisioning/datasources
-            - name: grafana-dashboards
+            - name: grafana-config-provisioning
+              mountPath: /etc/grafana/provisioning
+            - name: grafana-config-dashboards
               mountPath: /tmp/dashboards
       volumes:
-        - name: grafana-provisioning-dashboards
+        - name: grafana-config-provisioning
           configMap:
             name: grafana-config
             items:
               - key: provisioning-dashboards-default.yaml
-                path: default.yaml
-        - name: grafana-provisioning-datasources
-          configMap:
-            name: grafana-config
-            items:
-              - key: provisioning-dashboards-datasources.yaml
-                path: datasources.yaml
-        - name: grafana-dashboards
+                path: dashboards/default.yaml
+              - key: provisioning-datasources-datasource.yaml
+                path: datasources/datasource.yaml
+        - name: grafana-config-dashboards
           configMap:
             name: grafana-config
             items:
